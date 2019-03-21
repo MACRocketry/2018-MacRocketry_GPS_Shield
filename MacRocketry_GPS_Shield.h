@@ -1,8 +1,8 @@
 #ifndef MacRocketry_GPS_Shield_h //include guard
 #define MacRocketry_GPS_Shield_h
 
-#include <Arduino.h>        //Arduino Library
-#include <SoftwareSerial.h> //SoftwareSerial library
+#include <Arduino.h>                //include Arduino library
+#include <SoftwareSerial.h>         //SoftwareSerial library
 
 //need to decide whether GGA is good enough, or want RMC as well
 #define PMTK_SET_NMEA_OUTPUT_GGA "$PMTK314,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29"
@@ -17,27 +17,33 @@
 #define GPS_RX_PIN 8
 #define GPS_TX_PIN 7
 
-class MacRocketry_GPS_Shield
-{
-public:
-  String data;     //NMEA string
-  float utc, altitude; //only need time and altitude
-  int fix;             //check for fix data (0 - invalid, 1 - GPS, 2 - DGPS)
+class MacRocketry_GPS_Shield {
+  public:
+    MacRocketry_GPS_Shield(void);   //default constructor
+    void sendCommand(String cmd);   //send PMTK command
+    
+    bool readSerialBuffer(void);
+    bool clearSerialBuffer(void);
+    bool parseData(void);
+    void displayData(void);
 
-  MacRocketry_GPS_Shield(void); //default constructor
-  void sendCommand(String cmd); //send PMTK command
-  bool readData(void);
-  void displayData(void);
+    //getters --------------------
+    float getUTC(void);
+    float getAltitude(void);
+    uint8_t getFix(void);
+    String getData();
+    
+  private:
+    String data;          //NMEA string
+    float utc, alt;       //only need time and altitude
+    uint8_t fix;          //check for fix data (0 - invalid, 1 - GPS, 2 - DGPS)
+    
+    SoftwareSerial serial;      //serial to GPS
+    String serialStr;           //needed for readSerialBuffer()
+    
+    void init(void);    //init all variables to null
+    void start(void);   //set up GPS
 
-private:
-  SoftwareSerial serial; //serial to GPS
-  String serialStr;      //needed for bufferSerial()
-  char serialChar;       //needed for bufferSerial()
-  int indexPre, indexEnd; //needed for readData()
-
-  void init(void);  //init all variables to null
-  void start(void); //set up GPS
-  bool bufferSerial(void);
 };
 
 #endif
