@@ -4,6 +4,7 @@ MacRocketry_GPS_Shield gps; //create an object
 
 void setup() {
   Serial.begin(115200); //for serial monitor
+  while (!Serial); //wait for serial to be initialized
   Serial.println("Start GPS...");
   
 }
@@ -11,13 +12,13 @@ void setup() {
 void loop() {
   //need to call function readData() every loop
   //if there is new data, the function returns true
-  if (gps.readData()){
-    Serial.print(gps.data); //access NMEA data
+  if (gps.parseData()){
+    Serial.print(gps.getData()); //access NMEA data
     Serial.print("UTC: ");
-    Serial.print(gps.utc); //access UTC [float]
+    Serial.print(gps.getUTC()); //access UTC [float]
     Serial.print(" Fix: ");
-    Serial.print(gps.fix); //acess fix [int]
+    Serial.print(gps.getFix()); //acess fix [int]
     Serial.print(" Altitude ");
-    Serial.println(gps.altitude); //acess altitude [float]
+    Serial.println(gps.getAltitude()); //acess altitude [float]
   }
 }

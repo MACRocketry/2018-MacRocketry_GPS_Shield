@@ -152,6 +152,7 @@ MacRocketry_GPS_Shield gps; //create an object
 
 void setup() {
   Serial.begin(115200); //for serial monitor
+  while (!Serial); //wait for serial to be initialized
   Serial.println("Start GPS...");
   
 }

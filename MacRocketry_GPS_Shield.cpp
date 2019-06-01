@@ -42,7 +42,7 @@ void MacRocketry_GPS_Shield::sendCommand(String cmd){
 
 bool MacRocketry_GPS_Shield::readSerialBuffer(void){
   while (serial.available()){           //if data available
-    serialStr += serial.read();            //append to string
+    serialStr += serial.read();					//append to string
     if (serialStr.endsWith("\r\n")){    //if end of sentence
       data = serialStr;                 //record data
       serialStr = "";                   //reset string buffer
