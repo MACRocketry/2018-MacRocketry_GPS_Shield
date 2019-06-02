@@ -79,11 +79,8 @@ bool MacRocketry_GPS_Shield::parseData(void){
 
 void MacRocketry_GPS_Shield::displayData(){
   //display to serial monitor
-  Serial.print(data);
-  Serial.print("UTC: ");
-  Serial.print(utc);
-  Serial.print(" Fix: ");
-  Serial.print(fix);
-  Serial.print(" Altitude ");
-  Serial.println(alt);
+  Serial.print(getData());
+  Serial.print("UTC: "); Serial.print(getUTC());
+  Serial.print(" Fix: "); Serial.print(getFix());
+  Serial.print(" Altitude "); Serial.println(getAltitude());
 }
