@@ -12,7 +12,7 @@ void setup() {
 void loop() {
   //need to call function readData() every loop
   //if there is new data, the function returns true
-  if (gps.readData()){
+  if (gps.parseData()){
     Serial.print(gps.getData()); //access NMEA data
     Serial.print("UTC: ");
     Serial.print(gps.getUTC()); //access UTC [float]

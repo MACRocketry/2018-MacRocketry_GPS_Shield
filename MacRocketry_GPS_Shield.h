@@ -21,7 +21,7 @@ class MacRocketry_GPS_Shield {
   public:
     MacRocketry_GPS_Shield(void);   //default constructor
     void sendCommand(String cmd);   //send PMTK command
-    bool readData(void);
+    bool parseData(void);
     void displayData(void);
 
     //getters --------------------
