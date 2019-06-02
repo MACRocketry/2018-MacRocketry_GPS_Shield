@@ -34,16 +34,15 @@ class MacRocketry_GPS_Shield {
     String getData();
     
   private:
+    void init(void);    //init all variables to null
+    void start(void);   //set up GPS
+
     String data;          //NMEA string
     float utc, alt;       //only need time and altitude
     uint8_t fix;          //check for fix data (0 - invalid, 1 - GPS, 2 - DGPS)
     
     SoftwareSerial serial;      //serial to GPS
     String serialStr;           //needed for readSerialBuffer()
-    
-    void init(void);    //init all variables to null
-    void start(void);   //set up GPS
-
 };
 
 #endif
