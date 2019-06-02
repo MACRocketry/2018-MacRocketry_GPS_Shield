@@ -22,10 +22,7 @@ class MacRocketry_GPS_Shield {
   public:
     MacRocketry_GPS_Shield(void);   //default constructor
     void sendCommand(String cmd);   //send PMTK command
-    
-    bool readSerialBuffer(void);
-    bool clearSerialBuffer(void);
-    bool parseData(void);
+    bool readData(void);
     void displayData(void);
 
     //getters --------------------
@@ -37,6 +34,7 @@ class MacRocketry_GPS_Shield {
   private:
     void init(void);    //init all variables to null
     void start(void);   //set up GPS
+    bool readSerialBuffer(void);
 
     String data;          //NMEA string
     float utc, alt;       //only need time and altitude
@@ -103,7 +101,7 @@ bool MacRocketry_GPS_Shield::readSerialBuffer(void){
   return false;
 }
 
-bool MacRocketry_GPS_Shield::parseData(void){
+bool MacRocketry_GPS_Shield::readData(void){
   if (false == readSerialBuffer()) return false; //check for data
   if (data.startsWith("$GPGGA")){ //code below is for intepreting GGA
     
@@ -152,7 +150,7 @@ void setup() {
 void loop() {
   //need to call function readData() every loop
   //if there is new data, the function returns true
-  if (gps.parseData()){
+  if (gps.readData()){
     Serial.print(gps.getData()); //access NMEA data
     Serial.print("UTC: ");
     Serial.print(gps.getUTC()); //access UTC [float]

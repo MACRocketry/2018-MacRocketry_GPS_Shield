@@ -52,7 +52,7 @@ bool MacRocketry_GPS_Shield::readSerialBuffer(void){
   return false;
 }
 
-bool MacRocketry_GPS_Shield::parseData(void){
+bool MacRocketry_GPS_Shield::readData(void){
   if (false == readSerialBuffer()) return false; //check for data
   if (data.startsWith("$GPGGA")){ //code below is for intepreting GGA
     
