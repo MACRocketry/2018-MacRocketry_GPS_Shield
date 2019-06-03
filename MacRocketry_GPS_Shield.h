@@ -21,9 +21,6 @@ class MacRocketry_GPS_Shield {
   public:
     MacRocketry_GPS_Shield(void);   //default constructor
     void sendCommand(String cmd);   //send PMTK command
-    
-    bool readSerialBuffer(void);
-    bool clearSerialBuffer(void);
     bool parseData(void);
     void displayData(void);
 
@@ -34,16 +31,16 @@ class MacRocketry_GPS_Shield {
     String getData();
     
   private:
+    void init(void);    //init all variables to null
+    void start(void);   //set up GPS
+    bool readSerialBuffer(void);
+
     String data;          //NMEA string
     float utc, alt;       //only need time and altitude
     uint8_t fix;          //check for fix data (0 - invalid, 1 - GPS, 2 - DGPS)
     
     SoftwareSerial serial;      //serial to GPS
     String serialStr;           //needed for readSerialBuffer()
-    
-    void init(void);    //init all variables to null
-    void start(void);   //set up GPS
-
 };
 
 #endif

@@ -36,13 +36,13 @@ String MacRocketry_GPS_Shield::getData(void){ return data; }
 //serial commands --------------------------------------------------
 void MacRocketry_GPS_Shield::sendCommand(String cmd){
   //send PMTK command to GPS
-  serial.flush();
-  serial.println(cmd); //send command
+  serial.flush();       //flush anything in buffer
+  serial.println(cmd);  //send command
 }
 
 bool MacRocketry_GPS_Shield::readSerialBuffer(void){
   while (serial.available()){           //if data available
-    serialStr += serial.read();            //append to string
+    serialStr += serial.read();					//append to string
     if (serialStr.endsWith("\r\n")){    //if end of sentence
       data = serialStr;                 //record data
       serialStr = "";                   //reset string buffer
@@ -53,41 +53,34 @@ bool MacRocketry_GPS_Shield::readSerialBuffer(void){
 }
 
 bool MacRocketry_GPS_Shield::parseData(void){
-  if (readSerialBuffer()){  //check for data
-    if (data.startsWith("$GPGGA")){     //code below is for intepreting GGA
-      
-      //read utc data
-      uint8_t delimIndex = data.indexOf(",") + 1;                                   //skip to utc data
-      utc = data.substring(delimIndex, data.indexOf(",", delimIndex)).toFloat();    //read utc
-
-      //read fix data
-      for (int i = 0; i < 5; i++) delimIndex = data.indexOf(",", delimIndex) + 1;   //skip to fix data
-      fix = data.substring(delimIndex, data.indexOf(",", delimIndex)).toInt();      //read fix
-
-      //read altitude data
-      for (int i = 0; i < 3; i++) delimIndex = data.indexOf(",", delimIndex) + 1;   //skip to fix data
-      alt = data.substring(delimIndex, data.indexOf(",", delimIndex)).toFloat();    //read alt
-
-      return true; //if there is new data in buffer
-    }
+  if (false == readSerialBuffer()) return false; //check for data
+  if (data.startsWith("$GPGGA")){ //code below is for intepreting GGA
     
-    //if setup didn't work, resend command
-    else if (data.startsWith("$GP")){
-      sendCommand(PMTK_SET_NMEA_OUTPUT_GGA);
-    } else {
-      sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
-    }
+    //read utc data
+    uint8_t delimIndex = data.indexOf(",") + 1;                                   //skip to utc data
+    utc = data.substring(delimIndex, data.indexOf(",", delimIndex)).toFloat();    //read utc
+
+    //read fix data
+    for (int i = 0; i < 5; i++) delimIndex = data.indexOf(",", delimIndex) + 1;   //skip to fix data
+    fix = data.substring(delimIndex, data.indexOf(",", delimIndex)).toInt();      //read fix
+
+    //read altitude data
+    for (int i = 0; i < 3; i++) delimIndex = data.indexOf(",", delimIndex) + 1;   //skip to fix data
+    alt = data.substring(delimIndex, data.indexOf(",", delimIndex)).toFloat();    //read alt
+
+    return true; //if there is new data in buffer
   }
-  return false; //no new data in buffer
+  
+  //since setup did not work, resend command
+  if (data.startsWith("$GP")) sendCommand(PMTK_SET_NMEA_OUTPUT_GGA);
+  else sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
+  return false;
 }
 
 void MacRocketry_GPS_Shield::displayData(){
   //display to serial monitor
-  Serial.print(data);
-  Serial.print("UTC: ");
-  Serial.print(utc);
-  Serial.print(" Fix: ");
-  Serial.print(fix);
-  Serial.print(" Altitude ");
-  Serial.println(alt);
+  Serial.print(getData());
+  Serial.print("UTC: "); Serial.print(getUTC());
+  Serial.print(" Fix: "); Serial.print(getFix());
+  Serial.print(" Altitude "); Serial.println(getAltitude());
 }
